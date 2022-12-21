@@ -83,4 +83,11 @@ class BookServiceApplicationTests {
 		.andExpect(status().isOk())
 		.andExpect(content().json(jsonBook.write(book1).getJson()));
 	}
+
+	//AC:4 When I click the checkbox next to a book, and then the press the “Delete Book” button, the application will remove the book from my list.
+	@Test
+	public void canDeleteBook() throws Exception{
+		mvc.perform(delete("/books/1"))
+		.andExpect(status().isOk());
+	}
 }
