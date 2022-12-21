@@ -12,8 +12,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -31,6 +35,7 @@ class BookServiceApplicationTests {
 	private BookController bookController;
 
 	private JacksonTester<Book> jsonBook;
+	private JacksonTester<Collection<Book>> jsonBooks;
 
 	@BeforeEach
 	public void setUp(){
@@ -47,9 +52,24 @@ class BookServiceApplicationTests {
 	@Test
 	public void canCreateANewBook() throws Exception {
 		Book book = new Book(1, "The Hobbit", "J.R.R. Tolkein", 1937, 320);
-		mvc.perform(post("/book")
+		mvc.perform(post("/books")
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(jsonBook.write(book).getJson()))
 			.andExpect(status().isOk());
+	}
+
+	//AC2:  When I click “View All Books” the application will display a list of all the books in my list.
+	@Test
+	public void canGetAllBooks() throws Exception {
+		Book book1 = new Book(1, "The Hobbit", "J.R.R. Tolkein", 1937, 320);
+		Book book2 = new Book(2, "It", "Stephen King", 1986, 1138);
+		Collection<Book> books = new ArrayList<Book>();
+		books.add(book1);
+		books.add(book2);
+		when(bookRepository.getAllBooks()).thenReturn(books);
+		mvc.perform(get("/books/all")
+				.contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(content().json(jsonBooks.write(books).getJson()));
 	}
 }

@@ -1,5 +1,6 @@
 package com.glc.bookservice;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +17,11 @@ public class BookRepository implements IBookRepository<Book>{
     @Override
     public void save(Book book){
         repository.put(book.getId(), book);
+    }
+
+    @Override
+    public Collection<Book> getAllBooks(){
+        return repository.values();
     }
     
 }
