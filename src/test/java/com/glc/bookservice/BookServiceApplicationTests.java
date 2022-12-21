@@ -72,4 +72,15 @@ class BookServiceApplicationTests {
 			.andExpect(status().isOk())
 			.andExpect(content().json(jsonBooks.write(books).getJson()));
 	}
+
+	//AC:3 When I Click on Book Name the application will display all data of this book
+	@Test
+	public void canGetSpecificBook() throws Exception{
+		Book book1 = new Book(1, "The Hobbit", "J.R.R. Tolkein", 1937, 320);
+		when(bookRepository.getSpecificBook(1)).thenReturn(book1);
+		mvc.perform(get("/books/1")
+		.contentType(MediaType.APPLICATION_JSON))
+		.andExpect(status().isOk())
+		.andExpect(content().json(jsonBook.write(book1).getJson()));
+	}
 }

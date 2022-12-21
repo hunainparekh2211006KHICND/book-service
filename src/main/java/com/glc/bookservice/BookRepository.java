@@ -23,5 +23,10 @@ public class BookRepository implements IBookRepository<Book>{
     public Collection<Book> getAllBooks(){
         return repository.values();
     }
+
+    @Override
+    public Book getSpecificBook(int id){
+        return repository.get(id);
+    }
     
 }
