@@ -1,5 +1,8 @@
 package com.glc.bookservice;
 
+import java.util.Collection;
+
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +20,11 @@ public class BookController {
     @PostMapping("")  // (POST) https://localhost:8080/books
     public void createBook(@RequestBody Book book) {
         this.repository.save(book);
+    }
+
+    @GetMapping("/all") // (GET) https://localhost:8080/books/all
+    public Collection<Book> getAllBooks(){
+        return this.repository.getAllBooks();
     }
 
 
