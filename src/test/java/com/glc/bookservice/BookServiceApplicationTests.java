@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -94,9 +95,11 @@ class BookServiceApplicationTests {
 	//AC:5  When I click the checkbox next to a book, and then press the “Update Book” button, the application will allow me to update any of the information about the book.
 	@Test void canUpdateBook() throws Exception{
 		Book book = new Book(1, "The Hobbit", "J.R.R. Tolkein", 1937, 320);
-		mvc.perform(put("/books/1")
+		when(bookRepository.updateBook(any())).thenReturn(book);
+		mvc.perform(put("/books")
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(jsonBook.write(book).getJson()))
-			.andExpect(status().isOk());
+			.andExpect(status().isOk())
+			.andExpect(content().json(jsonBook.write(book).getJson()));
 	}
 }

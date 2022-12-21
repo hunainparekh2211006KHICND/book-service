@@ -10,4 +10,6 @@ public interface IBookRepository<T> {
     public Book getSpecificBook(int id);
 
     public void deleteBook(int id);
+
+    public Book updateBook(Book book);
 }

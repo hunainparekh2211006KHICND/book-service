@@ -33,5 +33,11 @@ public class BookRepository implements IBookRepository<Book>{
     public void deleteBook(int id){
         repository.remove(id);
     }
+
+    @Override
+    public Book updateBook(Book book){
+        repository.put(book.getId(),book);
+        return repository.get(book.getId());
+    }
     
 }
