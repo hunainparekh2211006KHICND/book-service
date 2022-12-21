@@ -2,6 +2,7 @@ package com.glc.bookservice;
 
 import java.util.Collection;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +33,10 @@ public class BookController {
     public Book getspecificBook(@PathVariable int id){
         return this.repository.getSpecificBook(id);
     }
-
+    
+    @DeleteMapping("{id}")
+    public void deleteBook(@PathVariable int id){
+        this.repository.deleteBook(id);
+    }
 
 }

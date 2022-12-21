@@ -8,4 +8,6 @@ public interface IBookRepository<T> {
     public Collection<T> getAllBooks();
 
     public Book getSpecificBook(int id);
+
+    public void deleteBook(int id);
 }
