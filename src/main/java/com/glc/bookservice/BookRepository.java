@@ -30,13 +30,16 @@ public class BookRepository implements IBookRepository<Book>{
     }
 
     @Override
-    public void deleteBook(int id){
-        repository.remove(id);
+    public Book deleteBook(int id){
+        return repository.remove(id);
     }
 
     @Override
     public Book updateBook(Book book){
-        repository.put(book.getId(),book);
+        Book returnBook = repository.get(book.getId());
+        if(returnBook != null){
+            repository.put(book.getId(),book);
+        }
         return repository.get(book.getId());
     }
     

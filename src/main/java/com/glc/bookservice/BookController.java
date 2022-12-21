@@ -2,6 +2,7 @@ package com.glc.bookservice;
 
 import java.util.Collection;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,13 +37,17 @@ public class BookController {
     }
     
     @DeleteMapping("/{id}")
-    public void deleteBook(@PathVariable int id){
-        this.repository.deleteBook(id);
+    public ResponseEntity<String> deleteBook(@PathVariable int id){
+        Book book = this.repository.deleteBook(id);
+        ResponseEntity<String> response =  book != null ? ResponseEntity.ok().body("Book Deleted Successfully") : ResponseEntity.ok().body("Book Not Found");
+        return response;
     }
-
+    
     @PutMapping("")
-    public Book updateBook(@RequestBody Book book){
-        return this.repository.updateBook(book);
+    public ResponseEntity<Book> updateBook(@RequestBody Book book){
+        Book updatedBook = this.repository.updateBook(book);
+        ResponseEntity<Book> response =  updatedBook != null ? ResponseEntity.ok().body(updatedBook) : ResponseEntity.notFound().build();
+        return response;
     }
 
 }
