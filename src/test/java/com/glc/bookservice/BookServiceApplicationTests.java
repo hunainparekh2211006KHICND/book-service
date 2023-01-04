@@ -19,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -30,7 +31,7 @@ class BookServiceApplicationTests {
 	private MockMvc mvc;
 
 	@Mock
-	private BookRepository bookRepository;
+	private IBookRepository bookRepository;
 
 	@InjectMocks
 	private BookController bookController;
@@ -64,10 +65,10 @@ class BookServiceApplicationTests {
 	public void canGetAllBooks() throws Exception {
 		Book book1 = new Book(1, "The Hobbit", "J.R.R. Tolkein", 1937, 320);
 		Book book2 = new Book(2, "It", "Stephen King", 1986, 1138);
-		Collection<Book> books = new ArrayList<Book>();
+		List<Book> books = new ArrayList<Book>();
 		books.add(book1);
 		books.add(book2);
-		when(bookRepository.getAllBooks()).thenReturn(books);
+		when(bookRepository.findAll()).thenReturn(books);
 		mvc.perform(get("/books/all")
 				.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
@@ -78,7 +79,7 @@ class BookServiceApplicationTests {
 	@Test
 	public void canGetSpecificBook() throws Exception{
 		Book book1 = new Book(1, "The Hobbit", "J.R.R. Tolkein", 1937, 320);
-		when(bookRepository.getSpecificBook(1)).thenReturn(book1);
+		when(bookRepository.findById(1).orElse(book1)).thenReturn(book1);
 		mvc.perform(get("/books/1")
 		.contentType(MediaType.APPLICATION_JSON))
 		.andExpect(status().isOk())
@@ -95,7 +96,7 @@ class BookServiceApplicationTests {
 	//AC:5  When I click the checkbox next to a book, and then press the “Update Book” button, the application will allow me to update any of the information about the book.
 	@Test void canUpdateBook() throws Exception{
 		Book book = new Book(1, "The Hobbit", "J.R.R. Tolkein", 1937, 320);
-		when(bookRepository.updateBook(any())).thenReturn(book);
+		when(bookRepository.save(any())).thenReturn(book);
 		mvc.perform(put("/books")
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(jsonBook.write(book).getJson()))

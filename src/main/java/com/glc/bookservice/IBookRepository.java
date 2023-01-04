@@ -1,15 +1,17 @@
 package com.glc.bookservice;
 
-import java.util.Collection;
+// import java.util.Collection;
 
-public interface IBookRepository<T> {
-    public void save(T t);
+import org.springframework.data.jpa.repository.JpaRepository;
 
-    public Collection<T> getAllBooks();
+public interface IBookRepository extends JpaRepository<Book,Integer>{
+    // public void save(T t);
 
-    public Book getSpecificBook(int id);
+    // public Collection<T> getAllBooks();
 
-    public Book deleteBook(int id);
+    // public Book getSpecificBook(int id);
 
-    public Book updateBook(Book book);
+    // public Book deleteBook(int id);
+
+    // public Book updateBook(Book book);
 }

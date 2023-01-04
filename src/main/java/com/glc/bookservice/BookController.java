@@ -1,7 +1,6 @@
 package com.glc.bookservice;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
@@ -31,11 +30,12 @@ public class BookController {
     @Autowired
     private Queue queue;
     
-    private final BookRepository repository;
+    @Autowired
+    private IBookRepository repository;
 
-    public BookController(BookRepository repository){
-        this.repository = repository;
-    }
+    // public BookController(BookRepository repository){
+    //     this.repository = repository;
+    // }
 
     @PostMapping("")  // (POST) https://localhost:8080/books
     public void createBook(@RequestBody Book book) {
@@ -44,24 +44,24 @@ public class BookController {
 
     @GetMapping("/all") // (GET) https://localhost:8080/books/all
     public Collection<Book> getAllBooks(){
-        return this.repository.getAllBooks();
+        return this.repository.findAll();
     }
 
     @GetMapping("/{id}")
     public Book getspecificBook(@PathVariable int id){
-        return this.repository.getSpecificBook(id);
+        return this.repository.findById(id).orElse(null);
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteBook(@PathVariable int id){
-        Book book = this.repository.deleteBook(id);
-        ResponseEntity<String> response =  book != null ? ResponseEntity.ok().body("Book Deleted Successfully") : ResponseEntity.ok().body("Book Not Found");
-        return response;
+    public void deleteBook(@PathVariable int id){
+        this.repository.deleteById(id);
+        // ResponseEntity<String> response =  book != null ? ResponseEntity.ok().body("Book Deleted Successfully") : ResponseEntity.ok().body("Book Not Found");
+        // return response;
     }
     
     @PutMapping("")
     public ResponseEntity<Book> updateBook(@RequestBody Book book){
-        Book updatedBook = this.repository.updateBook(book);
+        Book updatedBook = this.repository.save(book);
         ResponseEntity<Book> response =  updatedBook != null ? ResponseEntity.ok().body(updatedBook) : ResponseEntity.notFound().build();
         return response;
     }
@@ -76,7 +76,7 @@ public class BookController {
     @PostMapping("/addbook")
     public void saveBook(@RequestBody Book book) throws Exception {
         this.repository.save(book);
-        Collection<Book> books = this.repository.getAllBooks();
+        Collection<Book> books = this.repository.findAll();
         ObjectMapper mapper = new ObjectMapper();
         this.template.convertAndSend(queue.getName(),mapper.writeValueAsString(books));
     }
